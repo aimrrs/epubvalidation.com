@@ -1,0 +1,22 @@
+# 1. Start with a lightweight version of Python 3.11
+FROM python:3.11-slim
+
+# 2. Install Java (JRE) - This is required to run epubcheck.jar
+RUN apt-get update && \
+    apt-get install -y default-jre && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# 3. Create a working directory on the server called /app
+WORKDIR /app
+
+# 4. Copy your requirements file and install the Python libraries
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# 5. Copy your FastAPI script and the epubcheck folder into the server
+COPY . .
+
+# 6. Start the FastAPI server
+# We use Railway's dynamic $PORT variable, but default to 8000 just in case.
+CMD sh -c "uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}"
