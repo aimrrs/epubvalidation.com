@@ -1,9 +1,18 @@
 from fastapi import FastAPI, UploadFile, File, HTTPException, status, BackgroundTasks
+from fastapi.middleware.cors import CORSMiddleware
 from pathlib import Path
 import shutil
 import subprocess
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 STORAGE = Path("user-uploads")
 STORAGE.mkdir(parents=True, exist_ok=True)
