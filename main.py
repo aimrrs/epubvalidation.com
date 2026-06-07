@@ -20,7 +20,10 @@ STORAGE.mkdir(parents=True, exist_ok=True)
 CHECKER = Path("epubcheck-5.3.0/epubcheck.jar")
 
 def validateEpubFile (file_path: Path):
-    command = ["java", "-jar", str(CHECKER), str(file_path)]
+    local_java = Path("jdk-17.0.9+9-jre/bin/java")
+    java_executable = str(local_java) if local_java.exists() else "java"
+
+    command = [java_executable, "-jar", str(CHECKER), str(file_path)]
 
     try:
         process = subprocess.run(command, capture_output=True, text=True, check=False)
